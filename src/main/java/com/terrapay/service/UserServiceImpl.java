@@ -1,24 +1,26 @@
 package com.terrapay.service;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.rmi.AlreadyBoundException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 import com.terrapay.entity.Role;
 import com.terrapay.entity.User;
+import com.terrapay.exception.UserAlreadyExistException;
+
 import com.terrapay.repository.RoleRepository;
 import com.terrapay.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserServiceI {
-
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@Autowired
 	private RoleRepository roleRepository;
 
@@ -29,13 +31,16 @@ public class UserServiceImpl implements UserServiceI {
 	public User saveUser(User user) throws Exception {
 		Optional<Role> role = roleRepository.findById(user.getRole_Id());
 		user.setRole(role.get().getRole());
-		User user1 = userRepository.getUserByUsername(user.getEmail());
-		if(user1==null) {
-		return userRepository.save(user);}
-		else {
-			throw new Exception("Duplicate entries not allowed");
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+	
+		 if(checkIfUserExist(user.getEmail())){
+	            throw new UserAlreadyExistException("User already exists for this email");
+	        } 
+		 else {
+			return userRepository.save(user);
 		}
 	}
+
 	@Override
 	public User updateUser(User user) {
 		Optional<Role> role = roleRepository.findById(user.getRole_Id());
@@ -56,6 +61,19 @@ public class UserServiceImpl implements UserServiceI {
 		List<User> list = userRepository.findAll();
 		return list;
 
+	}
+
+	@Override
+	public User getUserByUsername(String email) {
+		 User user = userRepository.getUserByUsername(email);
+		user.getPassword();
+		return user;
+	}
+
+	@Override
+	public boolean checkIfUserExist(String email) {
+		
+		return userRepository.getUserByUsername(email) !=null ? true : false;
 	}
 
 }

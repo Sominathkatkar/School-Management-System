@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.terrapay.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	@Query("select user from User user where user.email= :email")
+	@Query("select user from User user where user.email=:email")
 	public User getUserByUsername(@Param("email") String email);
 }

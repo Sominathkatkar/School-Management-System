@@ -83,7 +83,7 @@ public class User extends Auditable{
 	private long salaryOrFees;
 	
 	@NotNull
-	@Size(max = 8, message = "Insert password maximum 8 characters")
+	@Size( message = "Insert password maximum 8 characters")
 	@Column(name="password")
 	private String password;
 	
