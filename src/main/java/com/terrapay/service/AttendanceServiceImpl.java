@@ -22,15 +22,20 @@ public class AttendanceServiceImpl implements AttendanceServiceI {
 	private AttendanceRepository attendenceRepository;
 	@Autowired
 	private UserRepository userRepository;
+	
 
 	@Override
 	public Attendance save(Attendance attendance) {
 
-		Attendance username = attendenceRepository.findByUsername(attendance.getUsername());
-
+		 User username = userRepository.getUserByUsername(attendance.getUsername());
+		 attendance.setUsername(username.getEmail());
+		 
+		attendance.setInTime(new Date(new Date().getTime()));
+		//attendanceServiceI.save(attendance);
 		if (checkIfUserExist(attendance.getUsername())) {
 			throw new UserAlreadyExistException("User already exists for this email");
-		} else {
+		} 
+		else {
 			return attendenceRepository.save(attendance);
 		}
 	}
@@ -47,12 +52,7 @@ public class AttendanceServiceImpl implements AttendanceServiceI {
 	 	return attendenceRepository.save(attendance);
 	}
 
-		/*
-		 * if(username.getUsername()!=null || attendance.getOutTime()!=null) {
-		 * username.setOutTime(new Date(new Date().getTime())); return
-		 * attendenceRepository.save(attendance); } else { throw new
-		 * UsernameNotFoundException("user not logged in"); }
-		 */
+		
 
 	
 

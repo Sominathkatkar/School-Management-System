@@ -45,30 +45,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().disable();
 		http.csrf().disable();
-		http.authorizeRequests()
-		.antMatchers("/getAll").hasAuthority("ADMIN")
+		http.authorizeRequests().antMatchers("/getAll").hasAuthority("ADMIN")
 		.antMatchers("/delete/{id}").hasAuthority("ADMIN")
-		.antMatchers("/add").permitAll()
-		.antMatchers("/login").hasAnyAuthority("ADMIN","TEACHER","STUDENT","STAFF")
-		.antMatchers("/logout").hasAnyAuthority("ADMIN","TEACHER","STUDENT","STAFF")
-		.anyRequest().authenticated().and()
-		/*.logout()
-	    .logoutRequestMatcher( new AntPathRequestMatcher( "/logout" ) )
-	    .logoutSuccessUrl( "/sessionEnded.action" )
-	    .invalidateHttpSession( true )
-	    .deleteCookies( "JSESSIONID" );*/
-		.sessionManagement()
-	    .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().httpBasic();
+				.antMatchers("/editUser").hasAuthority("ADMIN")
+				.antMatchers("/add").permitAll()
+				.antMatchers("/login").hasAnyAuthority("ADMIN", "TEACHER", "STUDENT", "STAFF")
+				.antMatchers("/signout").permitAll()//("ADMIN","TEACHER","STUDENT","STAFF")
+				.anyRequest().authenticated().and()
+
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().httpBasic();
 	}
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-   @Override
-   @Bean
-protected AuthenticationManager authenticationManager() throws Exception {
-	// TODO Auto-generated method stub
-	return super.authenticationManager();
-}
+
+	
 }

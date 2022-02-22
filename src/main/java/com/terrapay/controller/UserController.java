@@ -1,9 +1,12 @@
 package com.terrapay.controller;
 
 
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.persistence.NoResultException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RestController;
 import com.terrapay.entity.Attendance;
 import com.terrapay.entity.User;
-import com.terrapay.repository.AttendanceRepository;
-import com.terrapay.repository.UserRepository;
+
 import com.terrapay.service.AttendanceServiceI;
 import com.terrapay.service.UserServiceImpl;
 
@@ -33,27 +36,28 @@ public class UserController {
 	 
 
 	@PostMapping("/login")
-	public String login(@RequestBody User user) {
-		Attendance attendance = new Attendance();
-		attendance.setUsername(user.getEmail());
-		attendance.setInTime(new Date(new Date().getTime()));
-		
+	public String login(@RequestBody Attendance attendance) {
 		attendanceServiceI.save(attendance);
-		return "Login sucess";
+		/*
+		 * Attendance attendance = new Attendance();
+		 * attendance.setUsername(user.getEmail()); attendance.setInTime(new Date(new
+		 * Date().getTime())); attendanceServiceI.save(attendance);
+		 */
+			return "Login sucess";
 	}
 	
-	@PostMapping("/logout")
-	public  String logout(@RequestBody Attendance attendance) {
-		System.out.println(attendance.getId());
-		attendanceServiceI.signout(attendance);
-		return "logout success";
+	@PostMapping("/signout")
+	public  String logout( @RequestBody Attendance attendance ) 
+	{
+		
+	attendanceServiceI.signout(attendance);
+			return "logout success ";
 	}
-
  
 	
 
 	@PostMapping("/add")
-	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws Exception {
+	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws Exception  {
 				User saveUser = userServiceI.saveUser(user);
 		return new ResponseEntity<User>(saveUser, HttpStatus.CREATED);
 	}
