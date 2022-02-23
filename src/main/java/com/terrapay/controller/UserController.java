@@ -2,6 +2,7 @@ package com.terrapay.controller;
 
 
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.terrapay.entity.Attendance;
 import com.terrapay.entity.User;
@@ -38,16 +39,11 @@ public class UserController {
 	@PostMapping("/login")
 	public String login(@RequestBody Attendance attendance) {
 		attendanceServiceI.save(attendance);
-		/*
-		 * Attendance attendance = new Attendance();
-		 * attendance.setUsername(user.getEmail()); attendance.setInTime(new Date(new
-		 * Date().getTime())); attendanceServiceI.save(attendance);
-		 */
 			return "Login sucess";
 	}
 	
 	@PostMapping("/signout")
-	public  String logout( @RequestBody Attendance attendance ) 
+	public  String logout(@RequestBody Attendance attendance ) throws ParseException  
 	{
 		
 	attendanceServiceI.signout(attendance);
@@ -55,7 +51,6 @@ public class UserController {
 	}
  
 	
-
 	@PostMapping("/add")
 	public ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws Exception  {
 				User saveUser = userServiceI.saveUser(user);

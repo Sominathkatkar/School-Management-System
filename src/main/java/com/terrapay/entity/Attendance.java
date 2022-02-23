@@ -1,6 +1,7 @@
 package com.terrapay.entity;
 
 import java.security.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -34,7 +35,7 @@ public class Attendance {
 	private Date inTime;
 	
 	@Column(name="out_time")
-	@Temporal(TemporalType.TIMESTAMP)
+	//@Temporal(TemporalType.TIMESTAMP)
 	private Date outTime;
 	
 	@Column(name="duration")

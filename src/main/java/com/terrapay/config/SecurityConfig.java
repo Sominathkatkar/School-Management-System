@@ -19,7 +19,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.terrapay.service.CustomUserDetailsService;
 
 @Configuration
-
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -49,8 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/delete/{id}").hasAuthority("ADMIN")
 				.antMatchers("/editUser").hasAuthority("ADMIN")
 				.antMatchers("/add").permitAll()
+				.antMatchers("/findAll").permitAll()
+				.antMatchers("/date/{date}","/date/{startDate}/{endDate}").permitAll()
 				.antMatchers("/login").hasAnyAuthority("ADMIN", "TEACHER", "STUDENT", "STAFF")
-				.antMatchers("/signout").permitAll()//("ADMIN","TEACHER","STUDENT","STAFF")
+				.antMatchers("/signout").hasAnyAuthority("ADMIN","TEACHER","STUDENT","STAFF")
 				.anyRequest().authenticated().and()
 
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().httpBasic();
